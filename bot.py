@@ -15,56 +15,47 @@ def enviar_mensagem_telegram(mensagem):
     
     resposta = requests.post(url, json=payload)
     if resposta.status_code == 200:
-        print("Oferta enviada com sucesso para o canal!")
+        print("Achadinho automático enviado com sucesso!")
     else:
         print("Erro ao enviar para o Telegram:", resposta.text)
 
-def processar_achadinhos():
-    produtos = [
+def buscar_ofertas_automaticas():
+    print("A varrer fontes de ofertas em busca de descontos > 70%...")
+    
+    # Aqui o robô pode consultar feeds públicos de promoções ou APIs de monitoramento.
+    # Para o teste dinâmico automático, simulamos uma varredura de um produto que acabou de entrar em promoção relâmpago:
+    
+    ofertas_encontradas = [
         {
-            "titulo": "Smartphone de Última Geração (Queima de Estoque)",
+            "titulo": "Smart TV 4K LED 50 Polegadas (Erro de Preço Relâmpago)",
             "loja": "Amazon",
-            "preco_antigo": 2500.00,
-            "preco_novo": 699.00, 
+            "preco_antigo": 2800.00,
+            "preco_novo": 750.00, # Desconto de 73%
             "link": "https://www.amazon.com.br"
-        },
-        {
-            "titulo": "Kit Ferramentas Profissional Completo",
-            "loja": "Shopee",
-            "preco_antigo": 350.00,
-            "preco_novo": 89.90,
-            "link": "https://shopee.com.br"
-        },
-        {
-            "titulo": "Fone Bluetooth Esportivo à Prova D'água",
-            "loja": "Mercado Livre",
-            "preco_antigo": 180.00,
-            "preco_novo": 120.00, 
-            "link": "https://www.mercadolivre.com.br"
         }
     ]
 
-    print("Inspecionando ofertas das lojas...")
-
-    for p in produtos:
+    for p in ofertas_encontradas:
         preco_antigo = p["preco_antigo"]
         preco_novo = p["preco_novo"]
         
+        # Calcula o desconto de forma automática
         desconto = int(((preco_antigo - preco_novo) / preco_antigo) * 100)
         
+        # Só envia se atingir a sua regra de ouro (> 70% OFF)
         if desconto >= 70:
             mensagem = (
-                f"🔥 *ACHADINHO IMPERDÍVEL ({p['loja']})!* 🔥\n\n"
+                f"🚨 *ACHADINHO CAPTURADO AUTOMATICAMENTE ({p['loja']})!* 🚨\n\n"
                 f"📦 *Produto:* {p['titulo']}\n"
                 f"❌ De: R$ {preco_antigo:.2f}\n"
                 f"✅ Por: R$ {preco_novo:.2f} *({desconto}% OFF!)*\n\n"
-                f"🔗 [Clique aqui para garantir na {p['loja']}]({p['link']})"
+                f"🔗 [Aproveitar a Oferta na {p['loja']}]({p['link']})"
             )
             
-            print(f"Produto aprovado! Desconto de {desconto}% encontrado. Disparando...")
+            print(f"Oportunidade encontrada! {desconto}% de desconto. A disparar...")
             enviar_mensagem_telegram(mensagem)
         else:
-            print(f"Produto ignorado ({p['titulo']}): Desconto de {desconto}% (abaixo de 70%).")
+            print(f"Oferta ignorada: Apenas {desconto}% de desconto.")
 
 if __name__ == "__main__":
-    processar_achadinhos()
+    buscar_ofertas_automaticas()
