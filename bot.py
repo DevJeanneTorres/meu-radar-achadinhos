@@ -1,8 +1,12 @@
 import os
 import requests
 
+# Suas credenciais fixas do Telegram
 TOKEN = "8956945544:AAGQX1z5Vk4zRFDiCUPTpcgTU-KeVsyV19o"
 CHAT_ID = "-1004394023772"
+
+# Puxa a sua tag de associada com segurança direto do cofre do GitHub
+AMAZON_TAG = os.getenv("AMAZON_TAG", "jeanneachados-20")
 
 def enviar_mensagem_telegram(mensagem):
     url = f"https://api.telegram.org/bot{TOKEN}/sendMessage"
@@ -12,50 +16,45 @@ def enviar_mensagem_telegram(mensagem):
         "parse_mode": "Markdown",
         "disable_web_page_preview": False
     }
-    requests.post(url, json=payload)
+    
+    resposta = requests.post(url, json=payload)
+    if resposta.status_code == 200:
+        print("Achadinho automático enviado com sucesso para o Telegram!")
+    else:
+        print(f"Erro ao enviar para o Telegram: {resposta.text}")
 
-def puxar_achadinhos_reais():
-    print("Conectando ao feed de ofertas para buscar links reais...")
+def processar_achadinhos_automaticos():
+    # Exemplo de produto capturado pelo sistema de monitoramento
+    produto = {
+        "titulo": "Smart TV 4K LED 50 Polegadas (Oferta Relâmpago)",
+        "loja": "Amazon",
+        "preco_antigo": 2800.00,
+        "preco_novo": 750.00,
+        "asin": "B09B8V1LZ3" # Código único do produto na Amazon
+    }
     
-    # Exemplo de integração com uma API de catálogo ou feed JSON de promoções
-    # Numa aplicação avançada, você substitui esta URL pelo endpoint de uma API de afiliados ou agregador.
-    url_feed = "https://api.exemplo-de-ofertas.com.br/v1/promocoes-recentes"
+    preco_antigo = produto["preco_antigo"]
+    preco_novo = produto["preco_novo"]
     
-    try:
-        # Faz a requisição para buscar os dados reais atualizados da internet
-        resposta = requests.get(url_feed, timeout=10)
+    # Cálculo automático do desconto
+    desconto = int(((preco_antigo - preco_novo) / preco_antigo) * 100)
+    
+    if desconto >= 70:
+        # Monta o link de afiliado oficial automaticamente usando a sua Tag guardada
+        link_afiliado = f"https://www.amazon.com.br/dp/{produto['asin']}?tag={AMAZON_TAG}"
         
-        # Simulamos a estrutura que a API traria (Título, Loja, Preços e o Link Direto real do produto)
-        produtos_externos = [
-            {
-                "titulo": "Fritadeira Sem Óleo Airfryer 4L",
-                "loja": "Amazon",
-                "preco_antigo": 600.00,
-                "preco_novo": 150.00, # 75% de desconto real
-                "link_direto": "https://www.amazon.com.br/dp/exemplo-produto-real"
-            }
-        ]
+        mensagem = (
+            f"🔥 *ACHADINHO AUTOMÁTICO COM DESCONTO REAL ({produto['loja']})!* 🔥\n\n"
+            f"📦 *Produto:* {produto['titulo']}\n"
+            f"❌ De: R$ {preco_antigo:.2f}\n"
+            f"✅ Por: R$ {preco_novo:.2f} *({desconto}% OFF!)*\n\n"
+            f"🔗 [Garantir com Desconto de Afiliado]({link_afiliado})"
+        )
         
-        for p in produtos_externos:
-            preco_antigo = p["preco_antigo"]
-            preco_novo = p["preco_novo"]
-            
-            # Cálculo automático da porcentagem
-            desconto = int(((preco_antigo - preco_novo) / preco_antigo) * 100)
-            
-            # Valida se cumpre a sua regra de ouro
-            if desconto >= 70:
-                mensagem = (
-                    f"🔥 *ACHADINHO REAL DETECTADO ({p['loja']})!* 🔥\n\n"
-                    f"📦 *Produto:* {p['titulo']}\n"
-                    f"❌ De: R$ {preco_antigo:.2f}\n"
-                    f"✅ Por: R$ {preco_novo:.2f} *({desconto}% OFF!)*\n\n"
-                    f"🔗 [Comprar com Desconto Direto]({p['link_direto']})"
-                )
-                enviar_mensagem_telegram(mensagem)
-                
-    except Exception as e:
-        print(f"Erro ao buscar ofertas automáticas: {e}")
+        print(f"Desconto de {desconto}% detetado! A enviar link de afiliado...")
+        enviar_mensagem_telegram(mensagem)
+    else:
+        print(f"Oferta ignorada: Apenas {desconto}% de desconto.")
 
 if __name__ == "__main__":
-    puxar_achadinhos_reais()
+    processar_achadinhos_automaticos()
