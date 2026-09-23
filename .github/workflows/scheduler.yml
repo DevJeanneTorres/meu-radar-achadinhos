@@ -24,3 +24,4 @@ jobs:
         env:
           AMAZON_TAG: ${{ secrets.AMAZON_TAG }}
         run: python bot.py
+
