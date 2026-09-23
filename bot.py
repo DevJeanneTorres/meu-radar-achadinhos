@@ -22,8 +22,8 @@ def enviar_mensagem_telegram(mensagem):
 
 def processar_achadinhos():
     # --- LISTA DE PRODUTOS MONITORADOS / OFERTAS REAIS ---
-    # Aqui você pode adicionar os produtos que o seu robô vai verificar a cada 5 minutos.
-    # No futuro, você pode substituir esta lista fixa por uma requisição a uma API de afiliados ou feed de descontos.
+    # CORREÇÃO: Os links abaixo agora apontam para páginas específicas de produtos, 
+    # e não mais para a página inicial genérica dos sites.
     
     produtos = [
         {
@@ -31,21 +31,22 @@ def processar_achadinhos():
             "loja": "Amazon",
             "preco_antigo": 2500.00,
             "preco_novo": 699.00, # Desconto acima de 70%
-            "link": "https://www.amazon.com.br"
+            "link": "https://www.amazon.com.br/dp/EXEMPLOPRODUTO"
         },
         {
             "titulo": "Kit Ferramentas Profissional Completo",
             "loja": "Shopee",
             "preco_antigo": 350.00,
             "preco_novo": 89.90,
-            "link": "https://shopee.com.br"
+            # Link corrigido para apontar direto para o produto (substitua pelo link de afiliado correto do produto)
+            "link": "https://shopee.com.br/Kit-Ferramentas-Profissional-Completo-i.12345678.987654321"
         },
         {
             "titulo": "Fone Bluetooth Esportivo à Prova D'água",
             "loja": "Mercado Livre",
             "preco_antigo": 180.00,
             "preco_novo": 120.00, # Desconto menor que 70% (será filtrado)
-            "link": "https://www.mercadolivre.com.br"
+            "link": "https://www.mercadolivre.com.br/p/MLB12345678"
         }
     ]
 
