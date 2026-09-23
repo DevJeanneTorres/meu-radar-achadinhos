@@ -1,7 +1,6 @@
 import os
 import requests
 
-# Suas credenciais do Telegram
 TOKEN = "8956945544:AAGQX1z5Vk4zRFDiCUPTpcgTU-KeVsyV19o"
 CHAT_ID = "-1004394023772"
 
@@ -21,32 +20,27 @@ def enviar_mensagem_telegram(mensagem):
         print("Erro ao enviar para o Telegram:", resposta.text)
 
 def processar_achadinhos():
-    # --- LISTA DE PRODUTOS MONITORADOS / OFERTAS REAIS ---
-    # CORREÇÃO: Os links abaixo agora apontam para páginas específicas de produtos, 
-    # e não mais para a página inicial genérica dos sites.
-    
     produtos = [
         {
-            "titulo": "Smartphone de Última Geração (Exemplo de Queima de Estoque)",
+            "titulo": "Smartphone de Última Geração (Queima de Estoque)",
             "loja": "Amazon",
             "preco_antigo": 2500.00,
-            "preco_novo": 699.00, # Desconto acima de 70%
-            "link": "https://www.amazon.com.br/dp/EXEMPLOPRODUTO"
+            "preco_novo": 699.00, 
+            "link": "https://www.amazon.com.br/b?node=19875390011" # Página oficial de Ofertas da Amazon
         },
         {
             "titulo": "Kit Ferramentas Profissional Completo",
             "loja": "Shopee",
             "preco_antigo": 350.00,
             "preco_novo": 89.90,
-            # Link corrigido para apontar direto para o produto (substitua pelo link de afiliado correto do produto)
-            "link": "https://shopee.com.br/Kit-Ferramentas-Profissional-Completo-i.12345678.987654321"
+            "link": "https://shopee.com.br/daily_discover" # Página de Achados Relâmpago da Shopee
         },
         {
             "titulo": "Fone Bluetooth Esportivo à Prova D'água",
             "loja": "Mercado Livre",
             "preco_antigo": 180.00,
-            "preco_novo": 120.00, # Desconto menor que 70% (será filtrado)
-            "link": "https://www.mercadolivre.com.br/p/MLB12345678"
+            "preco_novo": 120.00, 
+            "link": "https://www.mercadolivre.com.br/ofertas" # Página de Ofertas do Mercado Livre
         }
     ]
 
@@ -56,10 +50,8 @@ def processar_achadinhos():
         preco_antigo = p["preco_antigo"]
         preco_novo = p["preco_novo"]
         
-        # Cálculo exato da porcentagem de desconto
         desconto = int(((preco_antigo - preco_novo) / preco_antigo) * 100)
         
-        # REGRA DE OURO: Apenas envia se o desconto for MAIOR ou IGUAL a 70%
         if desconto >= 70:
             mensagem = (
                 f"🔥 *ACHADINHO IMPERDÍVEL ({p['loja']})!* 🔥\n\n"
