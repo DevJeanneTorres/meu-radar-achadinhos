@@ -21,4 +21,6 @@ jobs:
         run: pip install requests
 
       - name: Executar o Robô
+        env:
+          AMAZON_TAG: ${{ secrets.AMAZON_TAG }}
         run: python bot.py
