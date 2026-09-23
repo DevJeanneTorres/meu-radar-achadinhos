@@ -26,21 +26,21 @@ def processar_achadinhos():
             "loja": "Amazon",
             "preco_antigo": 2500.00,
             "preco_novo": 699.00, 
-            "link": "https://www.amazon.com.br/b?node=19875390011" # Página oficial de Ofertas da Amazon
+            "link": "https://www.amazon.com.br"
         },
         {
             "titulo": "Kit Ferramentas Profissional Completo",
             "loja": "Shopee",
             "preco_antigo": 350.00,
             "preco_novo": 89.90,
-            "link": "https://shopee.com.br/daily_discover" # Página de Achados Relâmpago da Shopee
+            "link": "https://shopee.com.br"
         },
         {
             "titulo": "Fone Bluetooth Esportivo à Prova D'água",
             "loja": "Mercado Livre",
             "preco_antigo": 180.00,
             "preco_novo": 120.00, 
-            "link": "https://www.mercadolivre.com.br/ofertas" # Página de Ofertas do Mercado Livre
+            "link": "https://www.mercadolivre.com.br"
         }
     ]
 
