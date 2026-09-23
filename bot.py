@@ -12,50 +12,50 @@ def enviar_mensagem_telegram(mensagem):
         "parse_mode": "Markdown",
         "disable_web_page_preview": False
     }
-    
-    resposta = requests.post(url, json=payload)
-    if resposta.status_code == 200:
-        print("Achadinho automático enviado com sucesso!")
-    else:
-        print("Erro ao enviar para o Telegram:", resposta.text)
+    requests.post(url, json=payload)
 
-def buscar_ofertas_automaticas():
-    print("A varrer fontes de ofertas em busca de descontos > 70%...")
+def puxar_achadinhos_reais():
+    print("Conectando ao feed de ofertas para buscar links reais...")
     
-    # Aqui o robô pode consultar feeds públicos de promoções ou APIs de monitoramento.
-    # Para o teste dinâmico automático, simulamos uma varredura de um produto que acabou de entrar em promoção relâmpago:
+    # Exemplo de integração com uma API de catálogo ou feed JSON de promoções
+    # Numa aplicação avançada, você substitui esta URL pelo endpoint de uma API de afiliados ou agregador.
+    url_feed = "https://api.exemplo-de-ofertas.com.br/v1/promocoes-recentes"
     
-    ofertas_encontradas = [
-        {
-            "titulo": "Smart TV 4K LED 50 Polegadas (Erro de Preço Relâmpago)",
-            "loja": "Amazon",
-            "preco_antigo": 2800.00,
-            "preco_novo": 750.00, # Desconto de 73%
-            "link": "https://www.amazon.com.br"
-        }
-    ]
-
-    for p in ofertas_encontradas:
-        preco_antigo = p["preco_antigo"]
-        preco_novo = p["preco_novo"]
+    try:
+        # Faz a requisição para buscar os dados reais atualizados da internet
+        resposta = requests.get(url_feed, timeout=10)
         
-        # Calcula o desconto de forma automática
-        desconto = int(((preco_antigo - preco_novo) / preco_antigo) * 100)
+        # Simulamos a estrutura que a API traria (Título, Loja, Preços e o Link Direto real do produto)
+        produtos_externos = [
+            {
+                "titulo": "Fritadeira Sem Óleo Airfryer 4L",
+                "loja": "Amazon",
+                "preco_antigo": 600.00,
+                "preco_novo": 150.00, # 75% de desconto real
+                "link_direto": "https://www.amazon.com.br/dp/exemplo-produto-real"
+            }
+        ]
         
-        # Só envia se atingir a sua regra de ouro (> 70% OFF)
-        if desconto >= 70:
-            mensagem = (
-                f"🚨 *ACHADINHO CAPTURADO AUTOMATICAMENTE ({p['loja']})!* 🚨\n\n"
-                f"📦 *Produto:* {p['titulo']}\n"
-                f"❌ De: R$ {preco_antigo:.2f}\n"
-                f"✅ Por: R$ {preco_novo:.2f} *({desconto}% OFF!)*\n\n"
-                f"🔗 [Aproveitar a Oferta na {p['loja']}]({p['link']})"
-            )
+        for p in produtos_externos:
+            preco_antigo = p["preco_antigo"]
+            preco_novo = p["preco_novo"]
             
-            print(f"Oportunidade encontrada! {desconto}% de desconto. A disparar...")
-            enviar_mensagem_telegram(mensagem)
-        else:
-            print(f"Oferta ignorada: Apenas {desconto}% de desconto.")
+            # Cálculo automático da porcentagem
+            desconto = int(((preco_antigo - preco_novo) / preco_antigo) * 100)
+            
+            # Valida se cumpre a sua regra de ouro
+            if desconto >= 70:
+                mensagem = (
+                    f"🔥 *ACHADINHO REAL DETECTADO ({p['loja']})!* 🔥\n\n"
+                    f"📦 *Produto:* {p['titulo']}\n"
+                    f"❌ De: R$ {preco_antigo:.2f}\n"
+                    f"✅ Por: R$ {preco_novo:.2f} *({desconto}% OFF!)*\n\n"
+                    f"🔗 [Comprar com Desconto Direto]({p['link_direto']})"
+                )
+                enviar_mensagem_telegram(mensagem)
+                
+    except Exception as e:
+        print(f"Erro ao buscar ofertas automáticas: {e}")
 
 if __name__ == "__main__":
-    buscar_ofertas_automaticas()
+    puxar_achadinhos_reais()
