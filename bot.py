@@ -2,11 +2,10 @@ import os
 import requests
 import random
 
-# Credenciais do Telegram
+# Versao do Bot: 2.1 (Gatilho automatico ativado)
 TOKEN = "8956945544:AAGQX1z5Vk4zRFDiCUPTpcgTU-KeVsyV19o"
 CHAT_ID = "-1004394023772"
 
-# Tag de associada puxada do cofre do GitHub com segurança
 AMAZON_TAG = os.getenv("AMAZON_TAG", "jeanneachados-20")
 
 def enviar_mensagem_telegram(mensagem):
@@ -25,7 +24,6 @@ def enviar_mensagem_telegram(mensagem):
         print(f"Erro ao enviar para o Telegram: {resposta.text}")
 
 def processar_achadinhos_automaticos():
-    # Lista de produtos reais com termos de busca exatos na Amazon (nunca dão erro de página)
     produtos_reais = [
         {
             "titulo": "Echo Dot 5ª Geração com Alexa",
@@ -53,7 +51,6 @@ def processar_achadinhos_automaticos():
     preco_novo = produto["preco_novo"]
     desconto = int(((preco_antigo - preco_novo) / preco_antigo) * 100)
     
-    # Link de redirecionamento inteligente da Amazon que leva direto ao produto real
     link_afiliado = f"https://www.amazon.com.br/s?k={produto['termo_busca']}&tag={AMAZON_TAG}"
     
     mensagem = (
