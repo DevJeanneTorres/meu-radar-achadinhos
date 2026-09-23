@@ -25,15 +25,8 @@ def enviar_mensagem_telegram(mensagem):
         print(f"Erro ao enviar para o Telegram: {resposta.text}")
 
 def processar_achadinhos_automaticos():
-    # Lista de produtos reais e ativos na Amazon com ASINs legítimos
+    # Lista atualizada apenas com produtos reais e ASINs válidos na Amazon Brasil
     catalogo_real = [
-        {
-            "titulo": "Echo Dot (5ª Geração): Smart Speaker com Alexa",
-            "loja": "Amazon",
-            "preco_antigo": 429.00,
-            "preco_novo": 359.00,
-            "asin": "B09B8V1LZ3" # Substituído por um produto real da Amazon
-        },
         {
             "titulo": "Kindle 11ª Geração com Tela de 300 ppp e Iluminação Embutida",
             "loja": "Amazon",
@@ -50,7 +43,7 @@ def processar_achadinhos_automaticos():
         }
     ]
     
-    # O robô seleciona um produto real do catálogo de forma dinâmica a cada execução
+    # Seleciona um produto real do catálogo
     produto = random.choice(catalogo_real)
     
     preco_antigo = produto["preco_antigo"]
