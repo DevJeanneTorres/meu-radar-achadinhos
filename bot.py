@@ -8,7 +8,6 @@ CHAT_ID = "@jeanne_achadinhos_70"
 AMAZON_TAG = os.getenv("AMAZON_TAG", "jeanneachados-20")
 
 def enviar_mensagem_telegram(mensagem, foto_url=None):
-    """Envia a mensagem para o Telegram usando HTML para evitar erros de formatação."""
     if foto_url:
         url = f"https://api.telegram.org/bot{TOKEN}/sendPhoto"
         payload = {
@@ -57,22 +56,12 @@ def processar_achadinhos_automaticos():
             "preco_novo": 289.00,
             "cupom": "FIRETV50",
             "imagem": "https://m.media-amazon.com/images/I/51Cg9I4nv-L._AC_SL1000_.jpg"
-        },
-        {
-            "titulo": "Mouse Gamer Redragon Cobra M711 Chroma",
-            "asin": "B079JAI63W",
-            "preco_antigo": 149.90,
-            "preco_novo": 99.99,
-            "cupom": "COBRA10",
-            "imagem": "https://m.media-amazon.com/images/I/618a3Be67YL._AC_SL1000_.jpg"
         }
     ]
     
-    # Envia 1 produto por execução para testar com segurança
     produto = random.choice(produtos_reais)
     link_afiliado = f"https://www.amazon.com.br/dp/{produto['asin']}?tag={AMAZON_TAG}"
     
-    # Mensagem estruturada em HTML (Tags <b>, <i>, <s>, <a>)
     mensagem = (
         f"🔥 <b>ACHADINHO IMPERDÍVEL</b> 🔥\n\n"
         f"📦 <b>{produto['titulo']}</b>\n\n"
