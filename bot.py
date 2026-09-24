@@ -1,18 +1,19 @@
 import os
 import requests
 import random
+import json
 
 TOKEN = "8956945544:AAGQX1z5Vk4zRFDiCUPTpcgTU-KeVsyV19o"
 CHAT_ID = "@jeanne_achadinhos_70"
+HISTORICO_FILE = "ultimo.json"
 
 def enviar_mensagem_telegram(mensagem):
-    """Envia o achadinho via mensagem de texto estruturada em HTML."""
     url = f"https://api.telegram.org/bot{TOKEN}/sendMessage"
     payload = {
         "chat_id": CHAT_ID,
         "text": mensagem,
         "parse_mode": "HTML",
-        "disable_web_page_preview": False
+        "disable_web_page_preview": False  # Deixa o preview automático da Amazon puxar a foto/info certa do link
     }
     
     resposta = requests.post(url, json=payload)
@@ -21,8 +22,21 @@ def enviar_mensagem_telegram(mensagem):
     else:
         print(f"Erro ao enviar para o Telegram: {resposta.text}")
 
+def carregar_ultimo_produto():
+    if os.path.exists(HISTORICO_FILE):
+        try:
+            with open(HISTORICO_FILE, "r") as f:
+                return json.load(f).get("titulo")
+        except:
+            return None
+    return None
+
+def salvar_ultimo_produto(titulo):
+    with open(HISTORICO_FILE, "w") as f:
+        json.dump({"titulo": titulo}, f)
+
 def processar_achadinhos_automaticos():
-    # Lista atualizada com os seus produtos reais e os links curtos oficiais
+    # Produtos reais com seus respetivos links curtos corretos e validados
     produtos_reais = [
         {
             "titulo": "Samsung Galaxy Buds3 Pro, Fone de Ouvido sem Fio",
@@ -61,17 +75,27 @@ def processar_achadinhos_automaticos():
         }
     ]
     
-    # Escolhe um produto aleatório a cada execução do GitHub Actions
-    produto = random.choice(produtos_reais)
+    ultimo_enviado = carregar_ultimo_produto()
     
-    # Mensagem limpa, direta e com o link curto igualzinho ao seu exemplo
+    # Filtra para nunca repetir o último produto enviado na rodada anterior
+    produtos_disponibles = [p for p in produtos_reais if p["titulo"] != ultimo_enviado]
+    
+    if not produtos_disponibles:
+        produtos_disponibles = produtos_reais  # Reseta se a lista esvaziar
+        
+    produto = random.choice(produtos_disponibles)
+    
+    # Salva o atual para não repetir na próxima execução
+    salvar_ultimo_produto(produto["titulo"])
+    
+    # Mensagem estruturada
     mensagem = (
         f"🔥 <b>ACHADINHO IMPERDÍVEL</b> 🔥\n\n"
         f"📦 <b>{produto['titulo']}</b>\n\n"
         f"❌ De: <s>R$ {produto['preco_antigo']:.2f}</s>\n"
         f"⚡ <b>Por: R$ {produto['preco_novo']:.2f}</b>\n"
         f"🎯 Cupom: <code>{produto['cupom']}</code>\n\n"
-        f"🛒 <a href='{produto['link']}'>{produto['link']}</a>"
+        f"🛒 <a href='{produto['link']}'>Garantir Oferta na Amazon</a>"
     )
     
     print(f"A enviar oferta do produto: {produto['titulo']}...")
