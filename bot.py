@@ -3,7 +3,7 @@ import requests
 import random
 
 TOKEN = "8956945544:AAGQX1z5Vk4zRFDiCUPTpcgTU-KeVsyV19o"
-CHAT_ID = "-1004394023772"  # Ou o seu @username exato caso o canal seja público e o link funcione
+CHAT_ID = "@jeanne_achadinhos_70"
 
 AMAZON_TAG = os.getenv("AMAZON_TAG", "jeanneachados-20")
 
