@@ -1,0 +1,37 @@
+[
+    {
+        "titulo": "Samsung Galaxy Buds3 Pro, Fone de Ouvido sem Fio",
+        "preco_antigo": 1899.00,
+        "preco_novo": 1749.00,
+        "cupom": "BUDS10",
+        "link": "https://amzn.to/4rtKQEx"
+    },
+    {
+        "titulo": "Condicionador Tio Nacho Antiqueda Antienvelhecimento",
+        "preco_antigo": 49.90,
+        "preco_novo": 36.90,
+        "cupom": "TIONACHO",
+        "link": "https://amzn.to/3Ti06b6"
+    },
+    {
+        "titulo": "Simplo - Balde Dobrável de Plástico 10 Litros",
+        "preco_antigo": 89.90,
+        "preco_novo": 69.90,
+        "cupom": "BALDE10",
+        "link": "https://amzn.to/4ydmQrV"
+    },
+    {
+        "titulo": "Filtro de Linha CLAMPER Energia 5 Tomadas",
+        "preco_antigo": 79.90,
+        "preco_novo": 64.95,
+        "cupom": "CLAMPER5",
+        "link": "https://amzn.to/4hqu3xE"
+    },
+    {
+        "titulo": "Blocos de Montar Educativos - Conjunto de Engenharia",
+        "preco_antigo": 199.90,
+        "preco_novo": 175.75,
+        "cupom": "BLOCOS15",
+        "link": "https://amzn.to/4hmDldV"
+    }
+]
