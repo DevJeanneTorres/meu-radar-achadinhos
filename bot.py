@@ -24,45 +24,36 @@ def enviar_mensagem_telegram(mensagem):
         print(f"Erro ao enviar para o Telegram: {resposta.text}")
 
 def processar_achadinhos_automaticos():
-    # Lista de produtos reais com preços corretos e links limpos da Amazon
+    # Lista atualizada com ASINs válidos e seguros da Amazon Brasil
     produtos_reais = [
         {
-            "titulo": "Echo Dot 5ª Geração com Alexa",
+            "titulo": "Echo Dot 5ª Geração | Smart Speaker com Alexa",
             "asin": "B09B8V1LZ3",
             "preco_antigo": 429.00,
             "preco_novo": 359.00,
             "cupom": "ALEXA10"
         },
         {
-            "titulo": "Kindle 11ª Geração Tela 300 ppp",
+            "titulo": "Kindle 11ª Geração (Leitor de eBooks 300 ppp)",
             "asin": "B09SWW78VL",
             "preco_antigo": 499.00,
             "preco_novo": 422.00,
             "cupom": "KINDLEOFF"
         },
         {
-            "titulo": "Fire TV Stick com Controles por Voz",
+            "titulo": "Fire TV Stick com Controles por Voz com Alexa",
             "asin": "B091G3VZ95",
             "preco_antigo": 379.00,
             "preco_novo": 289.00,
             "cupom": "FIRETV50"
-        },
-        {
-            "titulo": "Mouse Gamer Redragon Cobra M711 Chroma",
-            "asin": "B079JAI63W",
-            "preco_antigo": 149.90,
-            "preco_novo": 99.99,
-            "cupom": "COBRA10"
         }
     ]
     
-    # Escolhe um produto de forma aleatória a cada execução
     produto = random.choice(produtos_reais)
     
-    # Gera o link oficial de afiliado com a sua tag correta
+    # Link de afiliado limpo e direto estruturado corretamente
     link_afiliado = f"https://www.amazon.com.br/dp/{produto['asin']}?tag={AMAZON_TAG}"
     
-    # Mensagem otimizada: direta ao ponto, preço certo e link limpo
     mensagem = (
         f"🔥 <b>ACHADINHO IMPERDÍVEL</b> 🔥\n\n"
         f"📦 <b>{produto['titulo']}</b>\n\n"
