@@ -13,12 +13,12 @@ def enviar_mensagem_telegram(mensagem):
         "chat_id": CHAT_ID,
         "text": mensagem,
         "parse_mode": "HTML",
-        "disable_web_page_preview": False  # Deixa o preview automático da Amazon puxar a foto/info certa do link
+        "disable_web_page_preview": False
     }
     
     resposta = requests.post(url, json=payload)
     if resposta.status_code == 200:
-        print("Achadinho enviado com sucesso para o Telegram!")
+        print("Achadinho enviado com sucesso para el Telegram!")
     else:
         print(f"Erro ao enviar para o Telegram: {resposta.text}")
 
@@ -36,8 +36,8 @@ def salvar_ultimo_produto(titulo):
         json.dump({"titulo": titulo}, f)
 
 def processar_achadinhos_automaticos():
-    # Produtos reais com seus respetivos links curtos corretos e validados
-    produtos_reais = [
+    # Cada produto é um bloco único e fechado: o link pertence EXCLUSIVAMENTE a ele
+    catalogo_produtos = [
         {
             "titulo": "Samsung Galaxy Buds3 Pro, Fone de Ouvido sem Fio",
             "preco_antigo": 1899.00,
@@ -77,18 +77,18 @@ def processar_achadinhos_automaticos():
     
     ultimo_enviado = carregar_ultimo_produto()
     
-    # Filtra para nunca repetir o último produto enviado na rodada anterior
-    produtos_disponibles = [p for p in produtos_reais if p["titulo"] != ultimo_enviado]
+    # Filtra para nunca repetir o mesmo produto da última execução
+    produtos_disponiveis = [p for p in catalogo_produtos if p["titulo"] != ultimo_enviado]
     
-    if not produtos_disponibles:
-        produtos_disponibles = produtos_reais  # Reseta se a lista esvaziar
+    if not produtos_disponiveis:
+        produtos_disponiveis = catalogo_produtos
         
-    produto = random.choice(produtos_disponibles)
+    produto = random.choice(produtos_disponiveis)
     
-    # Salva o atual para não repetir na próxima execução
+    # Salva para o histórico antirrepetição
     salvar_ultimo_produto(produto["titulo"])
     
-    # Mensagem estruturada
+    # Mensagem estruturada garantindo que o link e o texto combinem 100%
     mensagem = (
         f"🔥 <b>ACHADINHO IMPERDÍVEL</b> 🔥\n\n"
         f"📦 <b>{produto['titulo']}</b>\n\n"
