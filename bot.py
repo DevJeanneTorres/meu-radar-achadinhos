@@ -6,6 +6,7 @@ import json
 TOKEN = "8956945544:AAGQX1z5Vk4zRFDiCUPTpcgTU-KeVsyV19o"
 CHAT_ID = "@jeanne_achadinhos_70"
 HISTORICO_FILE = "ultimo.json"
+PRODUTOS_FILE = "produtos.json"
 
 def enviar_mensagem_telegram(mensagem):
     url = f"https://api.telegram.org/bot{TOKEN}/sendMessage"
@@ -18,77 +19,54 @@ def enviar_mensagem_telegram(mensagem):
     
     resposta = requests.post(url, json=payload)
     if resposta.status_code == 200:
-        print("Achadinho enviado com sucesso para el Telegram!")
+        print("Achadinho enviado com sucesso para o Telegram!")
     else:
         print(f"Erro ao enviar para o Telegram: {resposta.text}")
 
-def carregar_ultimo_produto():
+def carregar_historico():
     if os.path.exists(HISTORICO_FILE):
         try:
-            with open(HISTORICO_FILE, "r") as f:
+            with open(HISTORICO_FILE, "r", encoding="utf-8") as f:
                 return json.load(f).get("titulo")
         except:
             return None
     return None
 
-def salvar_ultimo_produto(titulo):
-    with open(HISTORICO_FILE, "w") as f:
-        json.dump({"titulo": titulo}, f)
+def salvar_historico(titulo):
+    with open(HISTORICO_FILE, "w", encoding="utf-8") as f:
+        json.dump({"titulo": titulo}, f, ensure_ascii=False)
+
+def carregar_produtos():
+    if os.path.exists(PRODUTOS_FILE):
+        try:
+            with open(PRODUTOS_FILE, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except:
+            print("Erro ao ler o ficheiro produtos.json")
+            return []
+    return []
 
 def processar_achadinhos_automaticos():
-    # Cada produto é um bloco único e fechado: o link pertence EXCLUSIVAMENTE a ele
-    catalogo_produtos = [
-        {
-            "titulo": "Samsung Galaxy Buds3 Pro, Fone de Ouvido sem Fio",
-            "preco_antigo": 1899.00,
-            "preco_novo": 1749.00,
-            "cupom": "BUDS10",
-            "link": "https://amzn.to/4rtKQEx"
-        },
-        {
-            "titulo": "Condicionador Tio Nacho Antiqueda Antienvelhecimento",
-            "preco_antigo": 49.90,
-            "preco_novo": 36.90,
-            "cupom": "TIONACHO",
-            "link": "https://amzn.to/3Ti06b6"
-        },
-        {
-            "titulo": "Simplo - Balde Dobrável de Plástico 10 Litros",
-            "preco_antigo": 89.90,
-            "preco_novo": 69.90,
-            "cupom": "BALDE10",
-            "link": "https://amzn.to/4ydmQrV"
-        },
-        {
-            "titulo": "Filtro de Linha CLAMPER Energia 5 Tomadas",
-            "preco_antigo": 79.90,
-            "preco_novo": 64.95,
-            "cupom": "CLAMPER5",
-            "link": "https://amzn.to/4hqu3xE"
-        },
-        {
-            "titulo": "Blocos de Montar Educativos - Conjunto de Engenharia",
-            "preco_antigo": 199.90,
-            "preco_novo": 175.75,
-            "cupom": "BLOCOS15",
-            "link": "https://amzn.to/4hmDldV"
-        }
-    ]
+    catalogo_produtos = carregar_produtos()
     
-    ultimo_enviado = carregar_ultimo_produto()
+    if not catalogo_produtos:
+        print("Nenhum produto encontrado no catálogo.")
+        return
+
+    ultimo_enviado = carregar_historico()
     
-    # Filtra para nunca repetir o mesmo produto da última execução
-    produtos_disponiveis = [p for p in catalogo_produtos if p["titulo"] != ultimo_enviado]
+    # Filtra para nunca repetir o último produto enviado na rodada anterior
+    produtos_disponiveis = [p for p in catalogo_produtos if p.get("titulo") != ultimo_enviado]
     
     if not produtos_disponiveis:
         produtos_disponiveis = catalogo_produtos
         
     produto = random.choice(produtos_disponiveis)
     
-    # Salva para o histórico antirrepetição
-    salvar_ultimo_produto(produto["titulo"])
+    # Salva no histórico para evitar repetição na próxima execução
+    salvar_historico(produto["titulo"])
     
-    # Mensagem estruturada garantindo que o link e o texto combinem 100%
+    # Mensagem 100% amarrada ao bloco do produto correto
     mensagem = (
         f"🔥 <b>ACHADINHO IMPERDÍVEL</b> 🔥\n\n"
         f"📦 <b>{produto['titulo']}</b>\n\n"
