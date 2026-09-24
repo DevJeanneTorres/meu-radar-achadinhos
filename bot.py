@@ -5,8 +5,6 @@ import random
 TOKEN = "8956945544:AAGQX1z5Vk4zRFDiCUPTpcgTU-KeVsyV19o"
 CHAT_ID = "@jeanne_achadinhos_70"
 
-AMAZON_TAG = os.getenv("AMAZON_TAG", "jeanneachados-20")
-
 def enviar_mensagem_telegram(mensagem):
     """Envia o achadinho via mensagem de texto estruturada em HTML."""
     url = f"https://api.telegram.org/bot{TOKEN}/sendMessage"
@@ -24,43 +22,56 @@ def enviar_mensagem_telegram(mensagem):
         print(f"Erro ao enviar para o Telegram: {resposta.text}")
 
 def processar_achadinhos_automaticos():
-    # Lista atualizada com ASINs válidos e seguros da Amazon Brasil
+    # Lista atualizada com os seus produtos reais e os links curtos oficiais
     produtos_reais = [
         {
-            "titulo": "Echo Dot 5ª Geração | Smart Speaker com Alexa",
-            "asin": "B09B8V1LZ3",
-            "preco_antigo": 429.00,
-            "preco_novo": 359.00,
-            "cupom": "ALEXA10"
+            "titulo": "Samsung Galaxy Buds3 Pro, Fone de Ouvido sem Fio",
+            "preco_antigo": 1899.00,
+            "preco_novo": 1749.00,
+            "cupom": "BUDS10",
+            "link": "https://amzn.to/4rtKQEx"
         },
         {
-            "titulo": "Kindle 11ª Geração (Leitor de eBooks 300 ppp)",
-            "asin": "B09SWW78VL",
-            "preco_antigo": 499.00,
-            "preco_novo": 422.00,
-            "cupom": "KINDLEOFF"
+            "titulo": "Condicionador Tio Nacho Antiqueda Antienvelhecimento",
+            "preco_antigo": 49.90,
+            "preco_novo": 36.90,
+            "cupom": "TIONACHO",
+            "link": "https://amzn.to/3Ti06b6"
         },
         {
-            "titulo": "Fire TV Stick com Controles por Voz com Alexa",
-            "asin": "B091G3VZ95",
-            "preco_antigo": 379.00,
-            "preco_novo": 289.00,
-            "cupom": "FIRETV50"
+            "titulo": "Simplo - Balde Dobrável de Plástico 10 Litros",
+            "preco_antigo": 89.90,
+            "preco_novo": 69.90,
+            "cupom": "BALDE10",
+            "link": "https://amzn.to/4ydmQrV"
+        },
+        {
+            "titulo": "Filtro de Linha CLAMPER Energia 5 Tomadas",
+            "preco_antigo": 79.90,
+            "preco_novo": 64.95,
+            "cupom": "CLAMPER5",
+            "link": "https://amzn.to/4hqu3xE"
+        },
+        {
+            "titulo": "Blocos de Montar Educativos - Conjunto de Engenharia",
+            "preco_antigo": 199.90,
+            "preco_novo": 175.75,
+            "cupom": "BLOCOS15",
+            "link": "https://amzn.to/4hmDldV"
         }
     ]
     
+    # Escolhe um produto aleatório a cada execução do GitHub Actions
     produto = random.choice(produtos_reais)
     
-    # Link de afiliado limpo e direto estruturado corretamente
-    link_afiliado = f"https://www.amazon.com.br/dp/{produto['asin']}?tag={AMAZON_TAG}"
-    
+    # Mensagem limpa, direta e com o link curto igualzinho ao seu exemplo
     mensagem = (
         f"🔥 <b>ACHADINHO IMPERDÍVEL</b> 🔥\n\n"
         f"📦 <b>{produto['titulo']}</b>\n\n"
         f"❌ De: <s>R$ {produto['preco_antigo']:.2f}</s>\n"
         f"⚡ <b>Por: R$ {produto['preco_novo']:.2f}</b>\n"
         f"🎯 Cupom: <code>{produto['cupom']}</code>\n\n"
-        f"🛒 <a href='{link_afiliado}'>Garantir Oferta na Amazon</a>"
+        f"🛒 <a href='{produto['link']}'>{produto['link']}</a>"
     )
     
     print(f"A enviar oferta do produto: {produto['titulo']}...")
