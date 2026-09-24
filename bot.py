@@ -3,26 +3,26 @@ import requests
 import random
 
 TOKEN = "8956945544:AAGQX1z5Vk4zRFDiCUPTpcgTU-KeVsyV19o"
-CHAT_ID = "@achadinhosdasjeh"  # Substitua pelo username exato do seu canal público
+CHAT_ID = "@achadinhosdasjeh"
 
 AMAZON_TAG = os.getenv("AMAZON_TAG", "jeanneachados-20")
 
 def enviar_mensagem_telegram(mensagem, foto_url=None):
-    """Envia a mensagem para o Telegram. Se houver foto, usa sendPhoto, senão sendMessage."""
+    """Envia a mensagem para o Telegram usando HTML para evitar erros de formatação."""
     if foto_url:
         url = f"https://api.telegram.org/bot{TOKEN}/sendPhoto"
         payload = {
             "chat_id": CHAT_ID,
             "photo": foto_url,
             "caption": mensagem,
-            "parse_mode": "Markdown"
+            "parse_mode": "HTML"
         }
     else:
         url = f"https://api.telegram.org/bot{TOKEN}/sendMessage"
         payload = {
             "chat_id": CHAT_ID,
             "text": mensagem,
-            "parse_mode": "Markdown",
+            "parse_mode": "HTML",
             "disable_web_page_preview": False
         }
     
@@ -33,7 +33,6 @@ def enviar_mensagem_telegram(mensagem, foto_url=None):
         print(f"Erro ao enviar para o Telegram: {resposta.text}")
 
 def processar_achadinhos_automaticos():
-    # Base ampliada com produtos reais da Amazon e imagens ilustrativas de alta qualidade
     produtos_reais = [
         {
             "titulo": "Echo Dot 5ª Geração com Alexa",
@@ -66,46 +65,25 @@ def processar_achadinhos_automaticos():
             "preco_novo": 99.99,
             "cupom": "COBRA10",
             "imagem": "https://m.media-amazon.com/images/I/618a3Be67YL._AC_SL1000_.jpg"
-        },
-        {
-            "titulo": "Headset Gamer HyperX Cloud Stinger 2",
-            "asin": "B0B4H27VSX",
-            "preco_antigo": 329.90,
-            "preco_novo": 239.99,
-            "cupom": "HYPERX20",
-            "imagem": "https://m.media-amazon.com/images/I/61unprF89FL._AC_SL1000_.jpg"
-        },
-        {
-            "titulo": "Lâmpada Inteligente Positivo Wi-Fi RGB",
-            "asin": "B07W5JK75H",
-            "preco_antigo": 89.90,
-            "preco_novo": 59.90,
-            "cupom": "POSITIVO15",
-            "imagem": "https://m.media-amazon.com/images/I/51wXh2vM1UL._AC_SL1000_.jpg"
         }
     ]
     
-    # Define aleatoriamente quantos produtos serão enviados nesta execução (ex: entre 1 e 2 produtos)
-    quantidade_a_enviar = random.randint(1, 2)
+    # Envia 1 produto por execução para testar com segurança
+    produto = random.choice(produtos_reais)
+    link_afiliado = f"https://www.amazon.com.br/dp/{produto['asin']}?tag={AMAZON_TAG}"
     
-    # Seleciona produtos únicos de forma aleatória para não repetir na mesma rodada
-    produtos_escolhidos = random.sample(produtos_reais, min(quantidade_a_enviar, len(produtos_reais)))
+    # Mensagem estruturada em HTML (Tags <b>, <i>, <s>, <a>)
+    mensagem = (
+        f"🔥 <b>ACHADINHO IMPERDÍVEL</b> 🔥\n\n"
+        f"📦 <b>{produto['titulo']}</b>\n\n"
+        f"❌ De: <s>R$ {produto['preco_antigo']:.2f}</s>\n"
+        f"⚡ <b>Por: R$ {produto['preco_novo']:.2f}</b> via Pix\n"
+        f"🎯 Cupom: <code>{produto['cupom']}</code>\n\n"
+        f"🛒 <a href='{link_afiliado}'>Garantir Oferta na Amazon</a>"
+    )
     
-    for produto in produtos_escolhidos:
-        link_afiliado = f"https://www.amazon.com.br/dp/{produto['asin']}?tag={AMAZON_TAG}"
-        
-        # Formato profissional ajustado para conversão
-        mensagem = (
-            f"🔥 *ACHADINHO IMPERDÍVEL* 🔥\n\n"
-            f"📦 *{produto['titulo']}*\n\n"
-            f"❌ De: ~~R$ {produto['preco_antigo']:.2f}~~\n"
-            f"⚡ *Por: R$ {produto['preco_novo']:.2f}* via Pix/Aplica\n"
-            f"🎯 *Cupom:* `{produto['cupom']}`\n\n"
-            f"🛒 [Garantir Oferta na Amazon]({link_afiliado})"
-        )
-        
-        print(f"A enviar oferta do produto: {produto['titulo']}...")
-        enviar_mensagem_telegram(mensagem, foto_url=produto['imagem'])
+    print(f"A enviar oferta do produto: {produto['titulo']}...")
+    enviar_mensagem_telegram(mensagem, foto_url=produto['imagem'])
 
 if __name__ == "__main__":
     processar_achadinhos_automaticos()
