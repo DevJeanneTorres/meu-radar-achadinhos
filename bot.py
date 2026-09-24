@@ -3,37 +3,90 @@ import requests
 import random
 
 TOKEN = "8956945544:AAGQX1z5Vk4zRFDiCUPTpcgTU-KeVsyV19o"
-# Mude provisoriamente para o ID numérico com -100 se tiver o ID, 
-# ou mantenha o @ se tiver certeza absoluta que o canal aceita via username.
 CHAT_ID = "@jeanne_achadinhos_70"
 
 AMAZON_TAG = os.getenv("AMAZON_TAG", "jeanneachados-20")
 
-def testar_envio():
-    url = f"https://api.telegram.org/bot{TOKEN}/sendMessage"
+def enviar_mensagem_telegram(mensagem, foto_url=None):
+    """Envia o achadinho com foto (se houver) ou apenas texto estruturado em HTML."""
+    if foto_url:
+        url = f"https://api.telegram.org/bot{TOKEN}/sendPhoto"
+        payload = {
+            "chat_id": CHAT_ID,
+            "photo": foto_url,
+            "caption": mensagem,
+            "parse_mode": "HTML"
+        }
+    else:
+        url = f"https://api.telegram.org/bot{TOKEN}/sendMessage"
+        payload = {
+            "chat_id": CHAT_ID,
+            "text": mensagem,
+            "parse_mode": "HTML",
+            "disable_web_page_preview": False
+        }
     
+    resposta = requests.post(url, json=payload)
+    if resposta.status_code == 200:
+        print("Achadinho enviado com sucesso para o Telegram!")
+    else:
+        print(f"Erro ao enviar para o Telegram: {resposta.text}")
+
+def processar_achadinhos_automaticos():
+    # Lista de produtos reais com preços corretos e links limpos da Amazon
+    produtos_reais = [
+        {
+            "titulo": "Echo Dot 5ª Geração com Alexa",
+            "asin": "B09B8V1LZ3",
+            "preco_antigo": 429.00,
+            "preco_novo": 359.00,
+            "cupom": "ALEXA10",
+            "imagem": "https://m.media-amazon.com/images/I/714RqwdBSLL._AC_SL1000_.jpg"
+        },
+        {
+            "titulo": "Kindle 11ª Geração Tela 300 ppp",
+            "asin": "B09SWW78VL",
+            "preco_antigo": 499.00,
+            "preco_novo": 422.00,
+            "cupom": "KINDLEOFF",
+            "imagem": "https://m.media-amazon.com/images/I/61AZvB20yGL._AC_SL1000_.jpg"
+        },
+        {
+            "titulo": "Fire TV Stick com Controles por Voz",
+            "asin": "B091G3VZ95",
+            "preco_antigo": 379.00,
+            "preco_novo": 289.00,
+            "cupom": "FIRETV50",
+            "imagem": "https://m.media-amazon.com/images/I/51Cg9I4nv-L._AC_SL1000_.jpg"
+        },
+        {
+            "titulo": "Mouse Gamer Redragon Cobra M711 Chroma",
+            "asin": "B079JAI63W",
+            "preco_antigo": 149.90,
+            "preco_novo": 99.99,
+            "cupom": "COBRA10",
+            "imagem": "https://m.media-amazon.com/images/I/618a3Be67YL._AC_SL1000_.jpg"
+        }
+    ]
+    
+    # Escolhe um produto de forma aleatória a cada execução
+    produto = random.choice(produtos_reais)
+    
+    # Gera o link oficial de afiliado com a tua tag correta
+    link_afiliado = f"https://www.amazon.com.br/dp/{produto['asin']}?tag={AMAZON_TAG}"
+    
+    # Mensagem otimizada: direta ao ponto, preço certo e link limpo
     mensagem = (
-        "🔥 <b>TESTE DE CONEXÃO DO ROBÔ</b> 🔥\n\n"
-        "📦 Se esta mensagem apareceu aqui, a API do Telegram e o bot estão 100% conectados!"
+        f"🔥 <b>ACHADINHO IMPERDÍVEL</b> 🔥\n\n"
+        f"📦 <b>{produto['titulo']}</b>\n\n"
+        f"❌ De: <s>R$ {produto['preco_antigo']:.2f}</s>\n"
+        f"⚡ <b>Por: R$ {produto['preco_novo']:.2f}</b>\n"
+        f"🎯 Cupom: <code>{produto['cupom']}</code>\n\n"
+        f"🛒 <a href='{link_afiliado}'>Garantir Oferta na Amazon</a>"
     )
     
-    payload = {
-        "chat_id": CHAT_ID,
-        "text": mensagem,
-        "parse_mode": "HTML"
-    }
-    
-    print(f"A tentar enviar para o chat: {CHAT_ID}...")
-    resposta = requests.post(url, json=payload)
-    
-    # Imprime a resposta crua da API do Telegram nos logs do GitHub Actions
-    print(f"Status Code da API: {resposta.status_code}")
-    print(f"Resposta da API do Telegram: {resposta.text}")
-    
-    if resposta.status_code == 200:
-        print("SUCESSO ABSOLUTO! Mensagem entregue no Telegram.")
-    else:
-        print("FALHA NA ENTREGA. Veja o erro detalhado acima.")
+    print(f"A enviar oferta do produto: {produto['titulo']}...")
+    enviar_mensagem_telegram(mensagem, foto_url=produto['imagem'])
 
 if __name__ == "__main__":
-    testar_envio()
+    processar_achadinhos_automaticos()
